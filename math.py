@@ -86,20 +86,15 @@ def start():
 
 def test(attempts, terms, maxcoeff, maxexp,Numvars):
     count = 0
+    num = 0
     total = str(attempts)
     current = singular.ring(0,createRingString(Numvars),'ds')
     polys = []
     for x in range(attempts):
         polynomial = singular(fixpoly(createPolynomial(poly(terms,maxcoeff,maxexp,Numvars))))
-        if singular.dim_slocus(polynomial)==2:
-            polys.append(polynomial)
-        if len(polys) == 2:
-            multipliedPoly = polys[0]*polys[1]
-            polys = []
-            if singular.dim_slocus(multipliedPoly) ==1:
-                print(multipliedPoly)
-            if singular.dim_slocus(multipliedPoly) == 1 and singular.is_is(multipliedPoly.jacob())==0 and len(singular.minAssGTZ(multipliedPoly))==1:
-                print(multipliedPoly)
+        if singular.dim_slocus(polynomial)==1:
+            if singular.dim_slocus(polynomial) == 1 and singular.is_is(polynomial.jacob())==0 and len(singular.minAssGTZ(polynomial))==1:
+                print(polynomial)
                 count=count+1
                 num = num+1
     print(str(count)+" out of "+total+" were successful.")

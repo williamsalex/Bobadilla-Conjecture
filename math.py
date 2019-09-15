@@ -86,7 +86,6 @@ def start():
 
 def test(attempts, terms, maxcoeff, maxexp,Numvars):
     count = 0
-    num = 0
     total = str(attempts)
     current = singular.ring(0,createRingString(Numvars),'ds')
     polys = []
@@ -96,7 +95,6 @@ def test(attempts, terms, maxcoeff, maxexp,Numvars):
             if singular.dim_slocus(polynomial) == 1 and singular.is_is(polynomial.jacob())==0 and len(singular.minAssGTZ(polynomial))==1:
                 print(polynomial)
                 count=count+1
-                num = num+1
     print(str(count)+" out of "+total+" were successful.")
     return 'complete'
 # no common factors, one dimension singular sets

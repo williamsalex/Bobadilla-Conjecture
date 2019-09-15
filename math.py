@@ -88,14 +88,13 @@ def test(attempts, terms, maxcoeff, maxexp,Numvars):
     count = 0
     total = str(attempts)
     current = singular.ring(0,createRingString(Numvars),'ds')
+    polys = []
     for x in range(attempts):
-        polys = []
         polynomial = singular(fixpoly(createPolynomial(poly(terms,maxcoeff,maxexp,Numvars))))
         if singular.dim_slocus(polynomial)==2:
             polys.append(polynomial)
         if len(polys) == 2:
             multipliedPoly = polys[0]*polys[1]
-            print(multipliedPoly)
             polys = []
             if singular.dim_slocus(multipliedPoly) ==1:
                 print(multipliedPoly)

@@ -1,16 +1,11 @@
 # check to make sure all libraries are necessary
 import random
-import decimal
-import time
-from decimal import *
 from random import uniform
 _=singular.lib('random.lib')
 _=singular.lib('sing.lib')
 _=singular.lib('poly.lib')
 _=singular.lib('absfact.lib')
 _=singular.lib('ring.lib')
-
-# generates trivariate polynomials and multiplies them together before testing
 
 # class that holds the data for each polynomial
 class poly():
@@ -110,4 +105,3 @@ def test(attempts, terms, maxcoeff, maxexp,Numvars):
         print(M.echelon_form())
         print('-----------')
     return 'hi!'
-# no common factors, one dimension singular sets

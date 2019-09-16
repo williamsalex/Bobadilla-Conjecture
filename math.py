@@ -80,7 +80,7 @@ def start():
     maxexp = int(input())
     print('Please enter the number of variables you would like:')
     Numvars = int(input())
-    return test(attempts, terms, maxcoeff, maxexp, Numvars)
+    return lenumbers(test(attempts, terms, maxcoeff, maxexp, Numvars),Numvars)
 
 # central testing function to clear polynomials pre manual beta invariant screening
 
@@ -94,8 +94,23 @@ def test(attempts, terms, maxcoeff, maxexp,Numvars):
         if singular.dim_slocus(polynomial)==1:
             if singular.dim_slocus(polynomial) == 1 and singular.is_is(polynomial.jacob())==0 and len(singular.minAssGTZ(polynomial))==1:
                 print(polynomial)
+                polys.append(polynomial)
                 count=count+1
     print(str(count)+" out of "+total+" were successful.")
-    return 'complete'
+    return polys
 # no common factors, one dimension singular sets
 
+def lenumbers(listofpolynomials, Numvars):
+    variables = createVarNames(Numvars)
+    k = var('k')
+    M = matrix()
+    for x in listofpolynomials:
+        print(x)
+        print(type(x))
+        singularaxis = []
+        for y in variables:
+            if singular((str(listofpolynomials[x])+'+'+y+'100')).milnor() != -1:
+                singularaxis.append(singular((str(listofpolynomials[x]+'+'+y+'100'))).milnor())
+                singularaxis.append(singular((str(listofpolynomials[x]+'+'+y+'101'))).milnor())
+        M = matrix(2,3,[1,k-1,singularaxis[0],1,k,singularaxis[1]])
+    return M.echelon_form()

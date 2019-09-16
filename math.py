@@ -80,7 +80,7 @@ def start():
     maxexp = int(input())
     print('Please enter the number of variables you would like:')
     Numvars = int(input())
-    return lenumbers(test(attempts, terms, maxcoeff, maxexp, Numvars),Numvars)
+    return test(attempts, terms, maxcoeff, maxexp, Numvars)
 
 # central testing function to clear polynomials pre manual beta invariant screening
 
@@ -98,8 +98,7 @@ def test(attempts, terms, maxcoeff, maxexp,Numvars):
                 count=count+1
     print(str(count)+" out of "+total+" were successful.")
     variables = createVarNames(Numvars)
-    k = var('k')
-    M = matrix()
+    k = int()
     for z in polys:
         x = str(z)
         singularaxis = []
@@ -107,9 +106,8 @@ def test(attempts, terms, maxcoeff, maxexp,Numvars):
             if singular(x+'+'+y+'100').milnor() != -1:
                 singularaxis.append(singular((x+'+'+y+'100')).milnor())
                 singularaxis.append(singular((x+'+'+y+'101')).milnor())
-        M = matrix([1,k-1,singularaxis[0]],[1,k,singularaxis[1]])
+        M = matrix(ZZ,[[1,k-1,singularaxis[0]],[1,k,singularaxis[1]]])
     return M.echelon_form()
-    return polys
 # no common factors, one dimension singular sets
 
 def lenumbers(listofpolynomials, Numvars):

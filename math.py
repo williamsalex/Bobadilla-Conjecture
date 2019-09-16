@@ -97,20 +97,36 @@ def test(attempts, terms, maxcoeff, maxexp,Numvars):
                 polys.append(polynomial)
                 count=count+1
     print(str(count)+" out of "+total+" were successful.")
+    variables = createVarNames(Numvars)
+    k = var('k')
+    M = matrix()
+    for z in polys:
+        x = str(z)
+        singularaxis = []
+        for y in variables:
+            if singular(x+'+'+y+'100').milnor() != -1:
+                singularaxis.append(singular((x+'+'+y+'100')).milnor())
+                singularaxis.append(singular((x+'+'+y+'101')).milnor())
+        M = matrix([1,k-1,singularaxis[0]],[1,k,singularaxis[1]])
+    return M.echelon_form()
     return polys
 # no common factors, one dimension singular sets
 
 def lenumbers(listofpolynomials, Numvars):
     variables = createVarNames(Numvars)
+    variablestring = ','.join(variables)
+    variablestring = '('+variablestring+')'
     k = var('k')
     M = matrix()
-    for x in listofpolynomials:
-        print(x)
-        print(type(x))
+    print(listofpolynomials)
+    r = singular.ring(32003,variablestring,'ds')
+    for z in listofpolynomials:
+        x = str(z)
         singularaxis = []
         for y in variables:
-            if singular((str(listofpolynomials[x])+'+'+y+'100')).milnor() != -1:
-                singularaxis.append(singular((str(listofpolynomials[x]+'+'+y+'100'))).milnor())
-                singularaxis.append(singular((str(listofpolynomials[x]+'+'+y+'101'))).milnor())
+            print(x+'+'+y+'100')
+            if singular(x+'+'+y+'100').milnor() != -1:
+                singularaxis.append(singular((x+'+'+y+'100')).milnor())
+                singularaxis.append(singular((x+'+'+y+'101')).milnor())
         M = matrix(2,3,[1,k-1,singularaxis[0],1,k,singularaxis[1]])
     return M.echelon_form()

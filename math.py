@@ -88,10 +88,9 @@ def test(attempts, terms, maxcoeff, maxexp,Numvars):
     polys = []
     for x in range(attempts):
         polynomial = singular(fixpoly(createPolynomial(poly(terms,maxcoeff,maxexp,Numvars))))
-        if singular.dim_slocus(polynomial)==1:
-            if singular.dim_slocus(polynomial) == 1 and list(singular.is_is(polynomial.jacob()))[-1]==0 and len(singular.minAssGTZ(polynomial))==1:
-                polys.append(polynomial)
-                count=count+1
+        if singular.dim_slocus(polynomial) == 1 and list(singular.is_is(polynomial.jacob()))[-1]==0 and len(singular.minAssGTZ(polynomial))==1:
+            polys.append(polynomial)
+            count=count+1
     print(str(count)+" out of "+total+" were successful.")
     variables = createVarNames(Numvars)
     k = int()
@@ -106,5 +105,5 @@ def test(attempts, terms, maxcoeff, maxexp,Numvars):
             print(z)
             M = matrix(ZZ,[[1,k-1,singularaxis[0]],[1,k,singularaxis[1]]])
             print(M.echelon_form())
-            print('--------------')
+            print('----------------')
     return 'hi!'

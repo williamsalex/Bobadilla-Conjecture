@@ -1,3 +1,5 @@
+# TO USE: type start() and follow prompts after pasting into a Sage MATH terminal
+
 # check to make sure all libraries are necessary
 import random
 from random import uniform
@@ -87,21 +89,22 @@ def test(attempts, terms, maxcoeff, maxexp,Numvars):
     for x in range(attempts):
         polynomial = singular(fixpoly(createPolynomial(poly(terms,maxcoeff,maxexp,Numvars))))
         if singular.dim_slocus(polynomial)==1:
-            if singular.dim_slocus(polynomial) == 1 and singular.is_is(polynomial.jacob())==0 and len(singular.minAssGTZ(polynomial))==1:
+            if singular.dim_slocus(polynomial) == 1 and list(singular.is_is(polynomial.jacob()))[-1]==0 and len(singular.minAssGTZ(polynomial))==1:
                 polys.append(polynomial)
                 count=count+1
     print(str(count)+" out of "+total+" were successful.")
     variables = createVarNames(Numvars)
     k = int()
     for z in polys:
-        print(z)
         x = str(z)
         singularaxis = []
         for y in variables:
             if singular(x+'+'+y+'100').milnor() != -1:
                 singularaxis.append(singular((x+'+'+y+'100')).milnor())
                 singularaxis.append(singular((x+'+'+y+'101')).milnor())
-        M = matrix(ZZ,[[1,k-1,singularaxis[0]],[1,k,singularaxis[1]]])
-        print(M.echelon_form())
-        print('-----------')
+        if len(singularaxis) == 2:
+            print(z)
+            M = matrix(ZZ,[[1,k-1,singularaxis[0]],[1,k,singularaxis[1]]])
+            print(M.echelon_form())
+            print('--------------')
     return 'hi!'

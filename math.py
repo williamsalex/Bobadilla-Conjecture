@@ -92,6 +92,9 @@ def test(attempts, terms, maxcoeff, maxexp,Numvars):
             polys.append(polynomial)
             count=count+1
     print(str(count)+" out of "+total+" were successful.")
+    file = open("Polynomials.txt","w")
+    for x in polys:
+        file.write(str(x)+"\n")
     variables = createVarNames(Numvars)
     k = int()
     for z in polys:

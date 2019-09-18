@@ -1,1 +1,1 @@
-Creates polynomials based on input parameters and tests them against a series of different exams. Sage MATH and Singular are required for usage.
+Research project under Dr. David B Massey undertaken jointly with Hunter Sarnelli. Aiming to disprove the Bobadilla conjecture using the invariant defined within [*A New Conjecture, A New Invariant, and a New Non-Splitting Result*](https://arxiv.org/pdf/1410.3316.pdf) 

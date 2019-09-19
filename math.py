@@ -9,7 +9,8 @@ _=singular.lib('poly.lib')
 _=singular.lib('absfact.lib')
 _=singular.lib('ring.lib')
 
-# class that holds the data for each polynomial
+# holds the different characteristics for the polynomials to be generated
+
 class poly():
     def __init__(self, Numterms, maxcoeff, maxexp, Numvars):
         self.t = Numterms
@@ -17,7 +18,7 @@ class poly():
         self.e = maxexp
         self.v = Numvars
 
-# class that holds the data for a single term in a polynomial
+# dictates the possibilities available to the generated term and randomly selects the number of variables in the term
 
 class term():
     def __init__(self, variables, constant, exponent):
@@ -26,14 +27,16 @@ class term():
         self.e = exponent
         self.f = int(random.uniform(1,variables))
 
-# function that creates the names of the variables
-# needs to be expanded upon
+# creates variable names
 
 def createVarNames(numvars):
     varNames=[]
-    if(numvars<27):
+    if(numvars<52):
         for x in range(numvars):
-            varNames.append(chr(x+65))
+            if(x<27):
+                varNames.append(chr(x+65))
+            else:
+                varNames.append(chr(x+96))
     else:
         return "too many variables!"
     return varNames

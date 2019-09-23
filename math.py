@@ -91,7 +91,17 @@ def test(attempts, terms, maxcoeff, maxexp,Numvars):
     polys = []
     for x in range(attempts):
         polynomial = singular(fixpoly(createPolynomial(poly(terms,maxcoeff,maxexp,Numvars))))
-        if singular.dim_slocus(polynomial) == 1 and list(singular.is_is(polynomial.jacob()))[-1]==0 and len(singular.minAssGTZ(polynomial))==1:
+        jacobian = list(polynomial.jacob())
+        for y in range(len(jacobian)):
+            varsinnomial=[]
+            for x in createVarNames(Numvars):
+                jacobian[y]=str(jacobian[y])
+                if jacobian[y].find(x) != -1:
+                    varsinnomial.append(x)
+            if len(varsinnomial) == 1:
+                jacobian[y]=jacobian[y][0:jacobian[y].find(varsinnomial[0])]+varsinnomial[0]
+        jacobian = singular.ideal(jacobian)
+        if singular.dim_slocus(polynomial) == 1 and list(singular.is_is(jacobian))[-1]==0 and len(singular.minAssGTZ(polynomial))==1:
             polys.append(polynomial)
             count=count+1
     print(str(count)+" out of "+total+" were successful.")

@@ -87,21 +87,18 @@ def start():
 def test(attempts, terms, maxcoeff, maxexp,Numvars):
     count = 0
     total = str(attempts)
-    current = singular.ring(0,createRingString(Numvars),'ds')
+    current = singular.ring(32003,createRingString(Numvars),'ds')
     polys = []
     for x in range(attempts):
         polynomial = singular(fixpoly(createPolynomial(poly(terms,maxcoeff,maxexp,Numvars))))
-        jacobian = list(polynomial.jacob())
-        for y in range(len(jacobian)):
-            varsinnomial=[]
-            for x in createVarNames(Numvars):
-                jacobian[y]=str(jacobian[y])
-                if jacobian[y].find(x) != -1:
-                    varsinnomial.append(x)
-            if len(varsinnomial) == 1:
-                jacobian[y]=jacobian[y][0:jacobian[y].find(varsinnomial[0])]+varsinnomial[0]
-        jacobian = singular.ideal(jacobian)
-        if singular.dim_slocus(polynomial) == 1 and list(singular.is_is(jacobian))[-1]==0 and len(singular.minAssGTZ(polynomial))==1:
+        newideal = []
+        for f in list(polynomial.jacob()):
+            newideal.append(radical(f))
+        newring = singular.ring(32003,createRingString(Numvars),'ds')
+        print(singular.current_ring())
+        i = ideal(newideal)
+        print(i)
+        if singular.dim_slocus(polynomial) == 1 and list(singular.is_is(i))[-1]==0 and len(singular.minAssGTZ(polynomial))==1:
             polys.append(polynomial)
             count=count+1
     print(str(count)+" out of "+total+" were successful.")
@@ -113,13 +110,17 @@ def test(attempts, terms, maxcoeff, maxexp,Numvars):
     for z in polys:
         x = str(z)
         singularaxis = []
+        print(z)
+        print(x)
         for y in variables:
             if singular(x+'+'+y+'100').milnor() != -1:
                 singularaxis.append(singular((x+'+'+y+'100')).milnor())
                 singularaxis.append(singular((x+'+'+y+'101')).milnor())
+        print(len(singularaxis))
         if len(singularaxis) == 2:
             print(z)
-            M = matrix(ZZ,[[1,k-1,singularaxis[0]],[1,k,singularaxis[1]]])
+            R.<k>=QQ[]
+            M = matrix([[1,k-1,singularaxis[0]],[1,k,singularaxis[1]]])
             print(M.echelon_form())
             print('----------------')
     return 'hi!'

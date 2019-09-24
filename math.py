@@ -8,6 +8,7 @@ _=singular.lib('sing.lib')
 _=singular.lib('poly.lib')
 _=singular.lib('absfact.lib')
 _=singular.lib('ring.lib')
+_=singular.lib('nctools.lib')
 
 # holds the different characteristics for the polynomials to be generated
 
@@ -48,6 +49,16 @@ def createRingString(numvars):
     base = base[:-1] + ')'
     return base
 
+# uses sage's jacobian matrix calculator so it doesnt screw with singular's strangely non abelian ring
+
+def findJacobian(polynomial, numvars):
+    listvars = createVarNames(numvars)
+    for x in listvars:
+        x = var(str(x))
+    fixedString = createRingString(numvars).replace(","," ")[1:-1]
+    fixedString = SR.var(fixedString)
+    return jacobian(str(polynomial),fixedString)
+
 # function that does the heavy lifting of creating polynomials, builds a list of term objects
 
 def createPolynomial(newpoly):
@@ -87,15 +98,16 @@ def start():
 def test(attempts, terms, maxcoeff, maxexp,Numvars):
     count = 0
     total = str(attempts)
-    current = singular.ring(32003,createRingString(Numvars),'ds')
+    current = singular.ring(0,createRingString(Numvars),'ds')
     polys = []
     for x in range(attempts):
         polynomial = singular(fixpoly(createPolynomial(poly(terms,maxcoeff,maxexp,Numvars))))
         newideal = []
-        for f in list(polynomial.jacob()):
-            newideal.append(radical(f))
-        newring = singular.ring(32003,createRingString(Numvars),'ds')
-        print(singular.current_ring())
+        p = findJacobian(polynomial,Numvars)
+        for f in p[0]:
+            print(f)
+            newideal.append(radical(singular(str(f))))
+        print(newideal)
         i = ideal(newideal)
         print(i)
         if singular.dim_slocus(polynomial) == 1 and list(singular.is_is(i))[-1]==0 and len(singular.minAssGTZ(polynomial))==1:

@@ -100,14 +100,22 @@ def test(attempts, terms, maxcoeff, maxexp,Numvars):
     total = str(attempts)
     current = singular.ring(0,createRingString(Numvars),'ds')
     polys = []
+    listvars = createVarNames(Numvars)
+    for x in listvars:
+        x = var(str(x))
+    fixedString = createRingString(Numvars).replace(","," ")[1:-1]
+    fixedString = SR.var(fixedString)
+    print(fixedString)
+    R.<fixedString> = PolynomialRing(RR, )
+    R.<x> = ZZ[]
     for x in range(attempts):
         polynomial = singular(fixpoly(createPolynomial(poly(terms,maxcoeff,maxexp,Numvars))))
         newideal = []
         p = findJacobian(polynomial,Numvars)
         for f in p[0]:
-            print(f)
             newideal.append(radical(singular(str(f))))
         print(newideal)
+        I = R.ideal(newideal, coerce=True)
         i = ideal(newideal)
         print(i)
         if singular.dim_slocus(polynomial) == 1 and list(singular.is_is(i))[-1]==0 and len(singular.minAssGTZ(polynomial))==1:

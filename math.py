@@ -122,7 +122,7 @@ def test(attempts, terms, maxcoeff, maxexp,Numvars):
                 if (M.echelon_form()[1][2]) != 1:
                     print(polynomial)
                     print("lambda one: "+str(M.echelon_form()[0][2]))
-                    print("Lambda nought: "+str(M.echelon_form()[1][2]))
+                    print("lambda nought: "+str(M.echelon_form()[1][2]))
                     print("------------------")
                     polys.append(polynomial)
                     count=count+1

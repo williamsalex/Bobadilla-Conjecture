@@ -100,6 +100,8 @@ def test(attempts, terms, maxcoeff, maxexp,Numvars):
     total = str(attempts)
     current = singular.ring(0,createRingString(Numvars),'ds')
     polys = []
+    variables = createVarNames(Numvars)
+    print("------------------")
     for x in range(attempts):
         polynomial = singular(fixpoly(createPolynomial(poly(terms,maxcoeff,maxexp,Numvars))))
         L = list(singular.jacob(polynomial))
@@ -108,25 +110,24 @@ def test(attempts, terms, maxcoeff, maxexp,Numvars):
             reducedL.append(radical(X))
         i = singular.ideal(reducedL)
         if singular.dim_slocus(polynomial) == 1 and list(singular.is_is(i))[-1]==0 and len(singular.minAssGTZ(polynomial))==1:
-            polys.append(polynomial)
-            count=count+1
+            singularaxis = []
+            for y in variables:
+                x = str(polynomial)
+                if singular(x+'+'+y+'100').milnor() != -1:
+                    singularaxis.append(singular((x+'+'+y+'100')).milnor())
+                    singularaxis.append(singular((x+'+'+y+'101')).milnor())
+            if len(singularaxis) == 2:
+                B = MatrixSpace(QQ,2,3)
+                M = B([[1,99,singularaxis[0]],[1,100,singularaxis[1]]])
+                if (M.echelon_form()[1][2]) != 1:
+                    print(polynomial)
+                    print("lambda one: "+str(M.echelon_form()[0][2]))
+                    print("Lambda nought: "+str(M.echelon_form()[1][2]))
+                    print("------------------")
+                    polys.append(polynomial)
+                    count=count+1
     print(str(count)+" out of "+total+" were successful.")
     file = open("Polynomials.txt","w")
     for x in polys:
         file.write(str(x)+"\n")
-    variables = createVarNames(Numvars)
-    print(polys)
-    for z in polys:
-        x = str(z)
-        singularaxis = []
-        for y in variables:
-            if singular(x+'+'+y+'100').milnor() != -1:
-                singularaxis.append(singular((x+'+'+y+'100')).milnor())
-                singularaxis.append(singular((x+'+'+y+'101')).milnor())
-        if len(singularaxis) == 2:
-            singular.current_ring()
-            M = matrix([[1,99,singularaxis[0]],[1,100,singularaxis[1]]])
-            print(M.echelon_form()[0][2])
-            print(M.echelon_form()[1][2])
-            print('----------------')
-    return 'hi!'
+    return polys

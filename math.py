@@ -98,11 +98,11 @@ def start():
 def test(attempts, terms, maxcoeff, maxexp,Numvars):
     count = 0
     total = str(attempts)
-    current = singular.ring(0,createRingString(Numvars),'ds')
     polys = []
     variables = createVarNames(Numvars)
     print("------------------")
     for x in range(attempts):
+        current = singular.ring(0,createRingString(Numvars),'ds')
         polynomial = singular(fixpoly(createPolynomial(poly(terms,maxcoeff,maxexp,Numvars))))
         L = list(singular.jacob(polynomial))
         reducedL = []
@@ -120,14 +120,31 @@ def test(attempts, terms, maxcoeff, maxexp,Numvars):
                 B = MatrixSpace(QQ,2,3)
                 M = B([[1,99,singularaxis[0]],[1,100,singularaxis[1]]])
                 if (M.echelon_form()[1][2]) != 1:
-                    print(polynomial)
-                    print("lambda one: "+str(M.echelon_form()[0][2]))
-                    print("lambda nought: "+str(M.echelon_form()[1][2]))
-                    print("------------------")
-                    polys.append(polynomial)
-                    count=count+1
+                    polycopy = str(polynomial)
+                    for y in variables:
+                        current = singular.ring(0,createRingString(Numvars),'ds')
+                        polynomial = singular(polycopy)
+                        x = str(polynomial)
+                        x = x.replace(y,'0')
+                        sansVar = (createRingString(Numvars).replace(y+",","")).replace(","+y,"")
+                        current = singular.ring(0,sansVar,'ds')
+                        var2 = []
+                        if singular.dim_slocus(singular(x))==0:
+                            current = singular.ring(0,createRingString(Numvars),'ds')
+                            polynomial = singular(polycopy)
+                            for x in variables:
+                                if x != y:
+                                    var2.append(x)
+                            partialdivs = []
+                            for x in var2:
+                                partialdivs.append(polynomial.diff(x))
+                            f = singular.ideal(partialdivs)
+                            polys.append(polynomial)
+                            count=count+1
+                            print(polynomial)
+                            print("milnor number: "+str(f.milnor()))
+                            print("lambda one: "+str(M.echelon_form()[0][2]))
+                            print("lambda naught: "+str(M.echelon_form()[1][2]))
+                            print("------------------")
     print(str(count)+" out of "+total+" were successful.")
-    file = open("Polynomials.txt","w")
-    for x in polys:
-        file.write(str(x)+"\n")
     return polys

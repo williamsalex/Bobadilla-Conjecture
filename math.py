@@ -139,12 +139,18 @@ def test(attempts, terms, maxcoeff, maxexp,Numvars):
                             for x in var2:
                                 partialdivs.append(polynomial.diff(x))
                             f = singular.ideal(partialdivs)
-                            polys.append(polynomial)
-                            count=count+1
-                            print(polynomial)
-                            print("milnor number: "+str(f.milnor()))
-                            print("lambda one: "+str(M.echelon_form()[0][2]))
-                            print("lambda naught: "+str(M.echelon_form()[1][2]))
-                            print("------------------")
+                            print('--')
+                            print(polycopy)
+                            print('--')
+                            print(f)
+                            print('--')
+                            if f.milnor() != -1:
+                                polys.append(polycopy)
+                                count=count+1
+                                print("beta invariant: "+(M.echelon_form()[1][2]-M.echelon_form()[0][2]+f.milnor()))
+                                print("general milnor number: "+str(f.milnor()))
+                                print("lambda one: "+str(M.echelon_form()[0][2]))
+                                print("lambda naught: "+str(M.echelon_form()[1][2]))
+                                print("------------------")
     print(str(count)+" out of "+total+" were successful.")
     return polys

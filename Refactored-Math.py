@@ -75,8 +75,6 @@ def fixJacob(sageGarbage):
         list2.append(singular(x))
     return list2
 
-# function that does the heavy lifting of creating polynomials, builds a list of term objects
-
 def createPolynomial(newpoly):
     polynomial = []
     for Y in range(newpoly.t):
@@ -111,19 +109,12 @@ def findSingularAxis(polynomial):
             singularaxis.append(singular((polynomial+'+'+y+'100')).milnor())
             singularaxis.append(singular((polynomial+'+'+y+'101')).milnor())
     return singularaxis
-    # if len(singularaxis) == 2:
-    #     return singularaxis
-    # else:
-    #     return False
 
 def rowReduceAxis(singularaxis):
     B = MatrixSpace(QQ,2,3)
     M = B([[1,99,singularaxis[0]],[1,100,singularaxis[1]]])
     return M.echelon_form()
-    # if = 1 break -- [1][2]
 
-### polynomial is a string
-### variables are a list of variable names
 def findSingularVariable(polynomial, variables):
     numvars = len(variables)
     for variable in variables:
@@ -150,10 +141,6 @@ def evaluate(polynomial,echelon_form):
     print "lambda naught"+" "+str(echelon_form[0][2])
     print "lambda one"+" "+str(echelon_form[1][2])
     return {"lambda naught": echelon_form[0][2],"lambda one": echelon_form[1][2]}
-    # if ideal.milnor() != -1:
-    #     return {"lambda naught": echelon_form[0][2],"lambda one": echelon_form[1][2]}
-    # else:
-    #     return 'fail'
     
 def master(polynomial):
     global hits

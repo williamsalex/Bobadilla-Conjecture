@@ -138,6 +138,7 @@ def findSingularVariable(polynomial, variables):
     return ideal
 
 def evaluate(polynomial,echelon_form):
+    print polynomial
     print "lambda naught"+" "+str(echelon_form[0][2])
     print "lambda one"+" "+str(echelon_form[1][2])
     return {"lambda naught": echelon_form[0][2],"lambda one": echelon_form[1][2]}

@@ -200,6 +200,10 @@ def start():
         master(currentPolynomial, goal)
         count += 1
         print count
+    for x in successes:
+        print x
+    return successes
+
         # for x in range(procs):
         #     polynomials.append(createPolynomial(currentpolynomialtype))
         # if __name__ == '__main__':

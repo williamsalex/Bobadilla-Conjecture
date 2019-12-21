@@ -206,7 +206,6 @@ def start():
         print count
     for x in successes:
         print x
-    return successes
 
         # for x in range(procs):
         #     polynomials.append(createPolynomial(currentpolynomialtype))
@@ -232,7 +231,6 @@ def jumpstart():
         print count
     for x in successes:
         print x
-    return successes
 
 def testOne(polynomial):
     global currentRing

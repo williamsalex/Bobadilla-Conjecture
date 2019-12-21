@@ -147,18 +147,20 @@ def findSingularVariable(polynomial, variables):
     return ideal
 
 def evaluate(polynomial,echelon_form):
+    global successes
+    successes.append({"polynomial": polynomial, "lambda naught": echelon_form[0][2],"lambda one": echelon_form[1][2]})
     print polynomial
     print "lambda naught"+" "+str(echelon_form[0][2])
     print "lambda one"+" "+str(echelon_form[1][2])
-    return {"lambda naught": echelon_form[0][2],"lambda one": echelon_form[1][2]}
+    return {"polynomial": polynomial, "lambda naught": echelon_form[0][2],"lambda one": echelon_form[1][2]}
     # if ideal.milnor() != -1:
     #     return {"lambda naught": echelon_form[0][2],"lambda one": echelon_form[1][2]}
     # else:
     #     return 'fail'
 # removed ideal for general milnor
 # "beta invariant": (echelon_form[1][2]-echelon_form[0][2]+ideal.milnor()),"general milnor number": ideal.milnor(), 
-
-def master(polynomial):
+successes = []
+def master(polynomial, goal):
     global hits
     reduktion = reduction(polynomial)
     if testForICIS(polynomial, reduktion) == True:
@@ -195,7 +197,7 @@ def start():
         global currentRing
         currentRing = singular.ring(0,createRingString(currentpolynomialtype.v),'ds')
         currentPolynomial = createPolynomial(currentpolynomialtype)
-        master(currentPolynomial)
+        master(currentPolynomial, goal)
         count += 1
         print count
         # for x in range(procs):
@@ -210,15 +212,19 @@ def jumpstart():
     count = 0
     while hits < 3:
         global currentRing
+        goal = 3
         currentRing = singular.ring(0,createRingString(currentpolynomialtype.v),'ds')
         currentPolynomial = createPolynomial(currentpolynomialtype)
-        master(currentPolynomial)
+        master(currentPolynomial, goal)
         count += 1
         print count
+    for x in successes:
+        print x
+    return successes
 
 def testOne(polynomial):
     global currentRing
     currentRing = singular.ring(0,createRingString(len(findVariables(polynomial))),'ds')
     currentPolynomial = polynomial
-    master(currentPolynomial)
+    master(currentPolynomial, 1)
 

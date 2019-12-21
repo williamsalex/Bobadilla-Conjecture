@@ -75,6 +75,8 @@ def fixJacob(sageGarbage):
         list2.append(singular(x))
     return list2
 
+# function that does the heavy lifting of creating polynomials, builds a list of term objects
+
 def createPolynomial(newpoly):
     polynomial = []
     for Y in range(newpoly.t):
@@ -109,12 +111,19 @@ def findSingularAxis(polynomial):
             singularaxis.append(singular((polynomial+'+'+y+'100')).milnor())
             singularaxis.append(singular((polynomial+'+'+y+'101')).milnor())
     return singularaxis
+    # if len(singularaxis) == 2:
+    #     return singularaxis
+    # else:
+    #     return False
 
 def rowReduceAxis(singularaxis):
     B = MatrixSpace(QQ,2,3)
     M = B([[1,99,singularaxis[0]],[1,100,singularaxis[1]]])
     return M.echelon_form()
+    # if = 1 break -- [1][2]
 
+### polynomial is a string
+### variables are a list of variable names
 def findSingularVariable(polynomial, variables):
     numvars = len(variables)
     for variable in variables:
@@ -142,13 +151,20 @@ def evaluate(polynomial,echelon_form):
     print "lambda naught"+" "+str(echelon_form[0][2])
     print "lambda one"+" "+str(echelon_form[1][2])
     return {"lambda naught": echelon_form[0][2],"lambda one": echelon_form[1][2]}
-    
+    # if ideal.milnor() != -1:
+    #     return {"lambda naught": echelon_form[0][2],"lambda one": echelon_form[1][2]}
+    # else:
+    #     return 'fail'
+# removed ideal for general milnor
+# "beta invariant": (echelon_form[1][2]-echelon_form[0][2]+ideal.milnor()),"general milnor number": ideal.milnor(), 
+
 def master(polynomial):
     global hits
     reduktion = reduction(polynomial)
     if testForICIS(polynomial, reduktion) == True:
         axis = findSingularAxis(polynomial)
         if len(axis) >= 2:
+            #### == 2
             row_reduced = rowReduceAxis(axis)
             if row_reduced[1][2] != 1:
                 #ideal = findSingularVariable(polynomial, findVariables(polynomial))
@@ -176,11 +192,17 @@ def start():
     currentpolynomialtype = poly(terms, maxcoeff, maxexp, numvars)
     count = 0
     while hits < goal:
+        global currentRing
         currentRing = singular.ring(0,createRingString(currentpolynomialtype.v),'ds')
         currentPolynomial = createPolynomial(currentpolynomialtype)
         master(currentPolynomial)
         count += 1
         print count
+        # for x in range(procs):
+        #     polynomials.append(createPolynomial(currentpolynomialtype))
+        # if __name__ == '__main__':
+        #     pool = Pool(processes = procs)
+        #     result = pool.apply_async(master, polynomials)
 
 def jumpstart():
     random.seed

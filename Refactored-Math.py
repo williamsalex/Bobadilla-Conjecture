@@ -193,6 +193,10 @@ def start():
     random.seed
     currentpolynomialtype = poly(terms, maxcoeff, maxexp, numvars)
     count = 0
+    global successes
+    global hits
+    hits = 0
+    successes = []
     while hits < goal:
         global currentRing
         currentRing = singular.ring(0,createRingString(currentpolynomialtype.v),'ds')
@@ -211,9 +215,13 @@ def start():
         #     result = pool.apply_async(master, polynomials)
 
 def jumpstart():
+    global successes
+    global hits
     random.seed
     currentpolynomialtype = poly(3, 10, 3, 3)
     count = 0
+    hits = 0
+    successes = []
     while hits < 3:
         global currentRing
         goal = 3
@@ -231,4 +239,3 @@ def testOne(polynomial):
     currentRing = singular.ring(0,createRingString(len(findVariables(polynomial))),'ds')
     currentPolynomial = polynomial
     master(currentPolynomial, 1)
-

@@ -104,12 +104,9 @@ def test(attempts, terms, maxcoeff, maxexp,Numvars):
     for x in range(attempts):
         current = singular.ring(0,createRingString(Numvars),'ds')
         polynomial = singular(fixpoly(createPolynomial(poly(terms,maxcoeff,maxexp,Numvars))))
-        L = list(singular.jacob(polynomial))
-        reducedL = []
-        for X in L:
-            reducedL.append(radical(X))
-        i = singular.ideal(reducedL)
-        if singular.dim_slocus(polynomial) == 1 and list(singular.is_is(i))[-1]==0 and len(singular.minAssGTZ(polynomial))==1:
+        D = singular.jacob(polynomial)
+        reduced = singular.radical(D)
+        if singular.dim_slocus(polynomial) == 1 and list(singular.is_is(reduced))[-1]==0 and len(singular.minAssGTZ(polynomial))==1:
             singularaxis = []
             for y in variables:
                 x = str(polynomial)

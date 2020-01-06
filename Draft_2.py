@@ -1,6 +1,3 @@
-# TO USE: type start() and follow prompts after pasting into a Sage MATH terminal
-
-# check to make sure all libraries are necessary
 import random
 from random import uniform
 import re
@@ -89,13 +86,17 @@ def createPolynomial(newpoly):
             stringPoly = stringPoly+varNames[int(random.uniform(0, polynomial[X].v))]+str(int(random.uniform(1,polynomial[X].e)))
     return stringPoly[1:]
 
+@parallel(timeout = 5)
 def reduction(inboundPoly):
+    s1 = Singular()
     subject = singular(inboundPoly)
     singular.set_ring(currentRing)
     jacobianMatrix = findJacobian(subject, len(findVariables(subject)))
     return singular.radical(fixJacob(jacobianMatrix))
 
+@parallel(timeout = 5)
 def testForICIS(subject, reduction):
+    s1 = Singular()
     singular.set_ring(currentRing)
     if singular.dim_slocus(subject) == 1:
         if list(singular.is_is(reduction))[-1]==0:
@@ -103,7 +104,9 @@ def testForICIS(subject, reduction):
                 return True
     return False
 
+@parallel(timeout = 5)
 def findSingularAxis(polynomial):
+    s1 = Singular()
     singularaxis = []
     variables = findVariables(polynomial)
     for y in variables:
@@ -124,7 +127,9 @@ def rowReduceAxis(singularaxis):
 
 ### polynomial is a string
 ### variables are a list of variable names
+@parallel(timeout = 10)
 def findSingularVariable(polynomial, variables):
+    s1 = Singular()
     numvars = len(variables)
     for variable in variables:
         current = singular.set_ring(currentRing)
@@ -207,21 +212,15 @@ def start():
     for x in successes:
         print x
 
-        # for x in range(procs):
-        #     polynomials.append(createPolynomial(currentpolynomialtype))
-        # if __name__ == '__main__':
-        #     pool = Pool(processes = procs)
-        #     result = pool.apply_async(master, polynomials)
-
 def jumpstart():
     global successes
     global hits
     random.seed
-    currentpolynomialtype = poly(3, 10, 3, 3)
+    currentpolynomialtype = poly(3, 10, 3, 5)
     count = 0
     hits = 0
     successes = []
-    while hits < 3:
+    while hits < 500:
         global currentRing
         goal = 3
         currentRing = singular.ring(0,createRingString(currentpolynomialtype.v),'ds')

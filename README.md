@@ -4,4 +4,4 @@ This program is a CLI application, requiring an installation of Sage MATH that i
 
 This project has the goal of generating a polynomial with a beta invariant less than 4. The samples that are being used toward this goal come from pseudo-random Python Mersenne Twister-based generation, re-seeded each generation. The generation code uses a very simple Markov chain, which hopefully will be expanded as the parallelization of the program grants access to higher-dimension polynomials and more interesting possibilities.
 
-This work amount to the discovery of an infinite family of polynomials with a negative Le differential. The work of finding a polynomial with a Beta invariant of 3 or less has been put on indefinite hold due to complexities arising from the complex Hilbert space.
+This work amounted to the discovery of an infinite family of polynomials with a negative Le differential. The work of finding a polynomial with a Beta invariant of 3 or less has been put on indefinite hold due to complexities arising from the complex Hilbert space.
